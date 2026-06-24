@@ -152,6 +152,7 @@ const cartEmptyEl = document.getElementById('cartEmpty');
 const cartNotesSection = document.getElementById('cartNotesSection');
 const cartFooter = document.getElementById('cartFooter');
 const cartTotalItems = document.getElementById('cartTotalItems');
+const cartGrandTotalValue = document.getElementById('cartGrandTotalValue');
 const orderDescription = document.getElementById('orderDescription');
 const whatsappBtn = document.getElementById('whatsappBtn');
 const emptyCartBtn = document.getElementById('emptyCartBtn');
@@ -558,16 +559,27 @@ function addToCart(productId) {
   showToast(`${product.model} añadida al carrito`);
 }
 
+function getItemPrice(item) {
+  return item.price ?? PRODUCTS.find((p) => p.id === item.id)?.price ?? 0;
+}
+
+function getItemSubtotal(item) {
+  return getItemPrice(item) * item.quantity;
+}
+
+function getGrandTotal() {
+  return cart.reduce((sum, item) => sum + getItemSubtotal(item), 0);
+}
+
 function updateQuantity(productId, delta) {
   const item = cart.find((i) => i.id === productId);
   if (!item) return;
 
-  item.quantity += delta;
+  const newQty = item.quantity + delta;
 
-  if (item.quantity <= 0) {
-    cart = cart.filter((i) => i.id !== productId);
-  }
+  if (newQty < 1) return;
 
+  item.quantity = newQty;
   saveCart();
   renderCart();
 }
@@ -610,23 +622,38 @@ function renderCart() {
   }
 
   cartTotalItems.textContent = total;
+  if (cartGrandTotalValue) {
+    cartGrandTotalValue.textContent = formatPrice(getGrandTotal());
+  }
 
   cartItemsEl.innerHTML = cart.map((item) => {
-    const price = item.price ?? PRODUCTS.find((p) => p.id === item.id)?.price ?? 0;
+    const price = getItemPrice(item);
+    const subtotal = getItemSubtotal(item);
+    const atMinQty = item.quantity <= 1;
     return `
     <li class="cart-item">
       <img class="cart-item__img" src="${asset(item.image)}" alt="${item.model}">
       <div class="cart-item__info">
         <p class="cart-item__model">${item.model}</p>
         <p class="cart-item__meta">${item.ref} · ${item.color}</p>
-        <p class="cart-item__price">${formatPrice(price)} c/u</p>
+        <div class="cart-item__pricing">
+          <span class="cart-item__price-label">Precio unitario</span>
+          <span class="cart-item__price">${formatPrice(price)}</span>
+        </div>
         <div class="cart-item__actions">
-          <div class="qty-control">
-            <button class="qty-btn" data-qty-minus="${item.id}" type="button" aria-label="Disminuir cantidad">−</button>
-            <span class="qty-value">${item.quantity}</span>
-            <button class="qty-btn" data-qty-plus="${item.id}" type="button" aria-label="Aumentar cantidad">+</button>
+          <div class="cart-item__qty-row">
+            <span class="cart-item__qty-label">Cantidad</span>
+            <div class="qty-control">
+              <button class="qty-btn${atMinQty ? ' qty-btn--disabled' : ''}" data-qty-minus="${item.id}" type="button" aria-label="Disminuir cantidad"${atMinQty ? ' disabled' : ''}>−</button>
+              <span class="qty-value">${item.quantity}</span>
+              <button class="qty-btn" data-qty-plus="${item.id}" type="button" aria-label="Aumentar cantidad">+</button>
+            </div>
           </div>
           <button class="cart-item__delete" data-delete="${item.id}" type="button">Eliminar</button>
+        </div>
+        <div class="cart-item__subtotal">
+          <span>Subtotal</span>
+          <strong>${formatPrice(subtotal)}</strong>
         </div>
       </div>
     </li>
@@ -682,17 +709,21 @@ function buildWhatsAppMessage() {
   let message = 'Hola, quiero realizar el siguiente pedido:\n\n';
 
   cart.forEach((item) => {
-    const price = item.price ?? PRODUCTS.find((p) => p.id === item.id)?.price ?? 0;
-    message += `Producto: Gafa ${item.ref}\n`;
-    message += `Modelo: ${item.model}\n`;
+    const price = getItemPrice(item);
+    const subtotal = getItemSubtotal(item);
+    message += `Producto: ${item.model}\n`;
+    message += `Referencia: ${item.ref}\n`;
     message += `Color: ${item.color}\n`;
-    message += `Precio: ${formatPrice(price)}\n`;
-    message += `Cantidad: ${item.quantity}\n\n`;
+    message += `Precio unitario: ${formatPrice(price)}\n`;
+    message += `Cantidad: ${item.quantity}\n`;
+    message += `Subtotal: ${formatPrice(subtotal)}\n\n`;
   });
+
+  message += `Total de la compra: ${formatPrice(getGrandTotal())}\n`;
 
   const notes = orderDescription.value.trim();
   if (notes) {
-    message += `Observaciones: ${notes}`;
+    message += `\nObservaciones: ${notes}`;
   }
 
   return message;
