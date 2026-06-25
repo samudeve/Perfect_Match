@@ -3,7 +3,7 @@
  * Carrito, favoritos, filtros y WhatsApp
  */
 
-const WHATSAPP_NUMBER = '573160183874';
+const WHATSAPP_NUMBER = '573503432058';
 const STORAGE_KEY = 'vision_elite_cart';
 const NOTES_KEY = 'vision_elite_notes';
 const FAVORITES_KEY = 'vision_elite_favorites';
@@ -734,7 +734,14 @@ whatsappBtn.addEventListener('click', () => {
 
   const message = encodeURIComponent(buildWhatsAppMessage());
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-  window.open(url, '_blank');
+
+  cart = [];
+  saveCart();
+  orderDescription.value = '';
+  saveNotes('');
+  closeCart();
+
+  window.location.href = url;
 });
 
 emptyCartBtn?.addEventListener('click', emptyCart);
