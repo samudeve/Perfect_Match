@@ -4,6 +4,7 @@
  */
 
 const WHATSAPP_NUMBER = '573503432058';
+const PRODUCTION_SITE_URL = 'https://samudeve.github.io/Perfect_Match/';
 const STORAGE_KEY = 'vision_elite_cart';
 const NOTES_KEY = 'vision_elite_notes';
 const FAVORITES_KEY = 'vision_elite_favorites';
@@ -705,25 +706,59 @@ orderDescription.addEventListener('input', () => {
 });
 
 // ---- WhatsApp ----
+function getSiteUrl() {
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') {
+    return PRODUCTION_SITE_URL;
+  }
+  const path = window.location.pathname.replace(/[^/]*$/, '');
+  return `${window.location.origin}${path}`;
+}
+
+function formatRefLabel(ref) {
+  return ref.replace(/^Ref\./i, 'REF.');
+}
+
+function getProductShareUrl(productId) {
+  const base = getSiteUrl().replace(/\/?$/, '/');
+  return `${base}p/${productId}.html`;
+}
+
 function buildWhatsAppMessage() {
+  const notes = orderDescription.value.trim();
+
+  if (cart.length === 1) {
+    const item = cart[0];
+    const refLabel = formatRefLabel(item.ref);
+    const shareUrl = getProductShareUrl(item.id);
+    let message = `Hola, tengo interés en ${refLabel}: ${shareUrl}`;
+
+    if (item.quantity > 1) {
+      message += `\nCantidad: ${item.quantity}`;
+    }
+
+    message += `\nTotal: ${formatPrice(getGrandTotal())}`;
+
+    if (notes) {
+      message += `\n\nObservaciones: ${notes}`;
+    }
+
+    return message;
+  }
+
   let message = 'Hola, quiero realizar el siguiente pedido:\n\n';
 
   cart.forEach((item) => {
-    const price = getItemPrice(item);
-    const subtotal = getItemSubtotal(item);
-    message += `Producto: ${item.model}\n`;
-    message += `Referencia: ${item.ref}\n`;
-    message += `Color: ${item.color}\n`;
-    message += `Precio unitario: ${formatPrice(price)}\n`;
-    message += `Cantidad: ${item.quantity}\n`;
-    message += `Subtotal: ${formatPrice(subtotal)}\n\n`;
+    const refLabel = formatRefLabel(item.ref);
+    const shareUrl = getProductShareUrl(item.id);
+    message += `Hola, tengo interés en ${refLabel}: ${shareUrl}\n`;
+    message += `Cantidad: ${item.quantity} · Color: ${item.color} · Subtotal: ${formatPrice(getItemSubtotal(item))}\n\n`;
   });
 
-  message += `Total de la compra: ${formatPrice(getGrandTotal())}\n`;
+  message += `Total de la compra: ${formatPrice(getGrandTotal())}`;
 
-  const notes = orderDescription.value.trim();
   if (notes) {
-    message += `\nObservaciones: ${notes}`;
+    message += `\n\nObservaciones: ${notes}`;
   }
 
   return message;
