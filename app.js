@@ -3,7 +3,7 @@
  * Carrito, favoritos, filtros y WhatsApp
  */
 
-const WHATSAPP_NUMBER = '573503432058';
+const WHATSAPP_NUMBER = '573024910680';
 const PRODUCTION_SITE_URL = 'https://samudeve.github.io/Perfect_Match/';
 const STORAGE_KEY = 'vision_elite_cart';
 const NOTES_KEY = 'vision_elite_notes';
