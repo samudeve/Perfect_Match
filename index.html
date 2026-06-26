@@ -37,11 +37,64 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero__content">
-      <!-- <p class="hero__eyebrow">Colección 2026</p> -->
+      <p class="hero__eyebrow">Colección 2026</p>
       <h1 class="hero__heading">Perfect Match</h1>
-      <p class="hero__text">Más que gafas, una forma de expresar tu estilo. </p>
-      
-      <a href="#catalogo" class="btn btn--primary" id="viewCatalogBtn">Ver catálogo</a>
+      <p class="hero__text">Monturas que elevan tu estilo con elegancia, actitud y personalidad.</p>
+      <div class="hero__actions">
+        <a href="#catalogo" class="btn btn--primary" id="viewCatalogBtn">Ver catálogo</a>
+        <a href="#lookbook" class="btn btn--ghost">Inspiración visual</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="experience-section" aria-label="Por qué elegir Perfect Match">
+    <div class="experience-section__content">
+      <div class="experience-section__copy">
+        <p class="experience-section__eyebrow">Una experiencia premium</p>
+        <h2>Descubre un mundo de estilos en un solo lugar</h2>
+        <p>Desde siluetas minimalistas hasta piezas con carácter, cada modelo está pensado para complementar tu identidad.</p>
+      </div>
+      <div class="experience-section__cards">
+        <article class="experience-card">
+          <strong>+15</strong>
+          <span>Modelos únicos</span>
+        </article>
+        <article class="experience-card">
+          <strong>4</strong>
+          <span>Estilos para explorar</span>
+        </article>
+        <article class="experience-card">
+          <strong>100%</strong>
+          <span>Pedido por WhatsApp</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="lookbook" id="lookbook">
+    <div class="lookbook__header">
+      <p class="lookbook__eyebrow">Lookbook</p>
+      <h2>Inspiración para encontrar tu próxima favorita</h2>
+    </div>
+    <div class="lookbook__grid">
+      <article class="lookbook-card lookbook-card--primary">
+        <div class="lookbook-card__content">
+          <p>Elegancia urbana</p>
+          <h3>Una silueta que habla de confianza y precisión.</h3>
+        </div>
+      </article>
+      <article class="lookbook-card">
+        <div class="lookbook-card__content">
+          <p>Attitude bold</p>
+          <h3>Monturas con presencia para quienes se destacan.</h3>
+        </div>
+      </article>
+      <article class="lookbook-card">
+        <div class="lookbook-card__content">
+          <p>Minimalista</p>
+          <h3>Diseños limpios y sofisticados para el día a día.</h3>
+        </div>
+      </article>
     </div>
   </section>
   
@@ -51,6 +104,44 @@
       <h2 class="section-title" id="sectionTitle">Nuestro catálogo</h2>
       <p class="section-subtitle" id="sectionSubtitle">Cada modelo incluye varias vistas para que elijas con confianza.</p>
     </div>
+
+    <section class="style-journey" aria-label="Explora por estilo">
+      <div class="style-journey__header">
+        <p class="style-journey__eyebrow">Encuentra tu estilo</p>
+        <h3>Elige la energía que quieres transmitir</h3>
+      </div>
+      <div class="style-journey__options">
+        <button class="style-chip style-chip--active" data-style-selector="" type="button" aria-pressed="true">Todos</button>
+        <button class="style-chip" data-style-selector="minimalista" type="button" aria-pressed="false">Minimalista</button>
+        <button class="style-chip" data-style-selector="bold" type="button" aria-pressed="false">Bold</button>
+        <button class="style-chip" data-style-selector="romantico" type="button" aria-pressed="false">Romántico</button>
+        <button class="style-chip" data-style-selector="deportivo" type="button" aria-pressed="false">Deportivo</button>
+      </div>
+      <div class="featured-picks" id="featuredPicks"></div>
+    </section>
+
+    <section class="featured-section" aria-label="Productos destacados">
+      <div class="featured-section__header">
+        <p class="featured-section__eyebrow">Productos destacados</p>
+        <h3>Lo más buscado esta temporada</h3>
+      </div>
+      <div class="featured-section__grid">
+        <article class="featured-showcase">
+          <div class="featured-showcase__info">
+            <p class="featured-showcase__label">Top seller</p>
+            <h4>Aviador Retro Oversized</h4>
+            <p>Una pieza icónica para quienes aman una presencia fuerte y elegante.</p>
+          </div>
+        </article>
+        <article class="featured-showcase featured-showcase--accent">
+          <div class="featured-showcase__info">
+            <p class="featured-showcase__label">Nueva favorita</p>
+            <h4>Deportivo Shield</h4>
+            <p>Funcionalidad, aire moderno y un perfil muy contemporáneo.</p>
+          </div>
+        </article>
+      </div>
+    </section>
 
     <!-- Barra de filtros -->
     <div class="filters" id="filters">
@@ -116,44 +207,54 @@
       </div>
 
       <div class="cart-panel__body">
-        <div class="cart-empty" id="cartEmpty">
-          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M12 20h40l-4 24H16z"/>
-            <circle cx="24" cy="52" r="3"/>
-            <circle cx="44" cy="52" r="3"/>
-          </svg>
-          <p>Tu carrito está vacío</p>
-          <span>Explora el catálogo y añade tus gafas favoritas.</span>
-        </div>
-        <ul class="cart-items" id="cartItems" role="list"></ul>
+        <div class="cart-panel__content">
+          <div class="cart-panel__main">
+            <div class="cart-empty" id="cartEmpty">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M12 20h40l-4 24H16z"/>
+                <circle cx="24" cy="52" r="3"/>
+                <circle cx="44" cy="52" r="3"/>
+              </svg>
+              <p>Tu carrito está vacío</p>
+              <span>Explora el catálogo y añade tus gafas favoritas.</span>
+            </div>
+            <ul class="cart-items" id="cartItems" role="list"></ul>
+          </div>
 
-        <div class="cart-notes" id="cartNotesSection" hidden>
-          <label for="orderDescription" class="cart-notes__label">Descripción</label>
-          <textarea
-            id="orderDescription"
-            class="cart-notes__input"
-            rows="3"
-            placeholder="Comentarios o solicitudes adicionales (ej. entrega en horario de tarde)…"
-          ></textarea>
+          <aside class="cart-panel__summary" id="cartFooter" hidden>
+            <div class="cart-summary-card">
+              <div class="cart-summary-card__header">
+                <h3>Resumen del pedido</h3>
+                <span id="cartTotalItems">0 artículos</span>
+              </div>
+              <div class="cart-grand-total" id="cartGrandTotal">
+                <span>Total estimado</span>
+                <strong id="cartGrandTotalValue">$ 0</strong>
+              </div>
+              <div class="cart-summary-card__meta">
+                <p>Tu pedido se enviará por WhatsApp con atención personalizada.</p>
+              </div>
+              <div class="cart-notes" id="cartNotesSection" hidden>
+                <label for="orderDescription" class="cart-notes__label">Descripción</label>
+                <textarea
+                  id="orderDescription"
+                  class="cart-notes__input"
+                  rows="3"
+                  placeholder="Comentarios o solicitudes adicionales (ej. entrega en horario de tarde)…"
+                ></textarea>
+              </div>
+              <div class="cart-summary-card__actions">
+                <button class="btn btn--cart-clear" id="emptyCartBtn" type="button">Vaciar carrito</button>
+                <button class="btn btn--whatsapp" id="whatsappBtn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.884 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Confirmar pedido
+                </button>
+              </div>
+            </div>
+          </aside>
         </div>
-      </div>
-
-      <div class="cart-panel__footer" id="cartFooter" hidden>
-        <div class="cart-summary">
-          <span>Total de artículos</span>
-          <strong id="cartTotalItems">0</strong>
-        </div>
-        <div class="cart-grand-total" id="cartGrandTotal">
-          <span>Total de la compra:</span>
-          <strong id="cartGrandTotalValue">$ 0</strong>
-        </div>
-        <button class="btn btn--cart-clear" id="emptyCartBtn" type="button">Vaciar carrito</button>
-        <button class="btn btn--whatsapp" id="whatsappBtn">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.884 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          Confirmar pedido
-        </button>
       </div>
     </div>
   </aside>

@@ -160,9 +160,31 @@ const emptyCartBtn = document.getElementById('emptyCartBtn');
 const viewCatalogBtn = document.getElementById('viewCatalogBtn');
 const toastEl = document.getElementById('toast');
 const headerEl = document.getElementById('header');
+const featuredPicksEl = document.getElementById('featuredPicks');
 
 const carouselState = {};
+let activeStyle = '';
 
+const STYLE_RECOMMENDATIONS = {
+  minimalista: [
+    { title: 'Oval Minimalista', description: 'Línea suave y sobria para un look atemporal.' },
+    { title: 'Rectangular Clásica', description: 'Versión limpia y estructurada con gran presencia.' },
+  ],
+  bold: [
+    { title: 'Aviador Retro Oversized', description: 'Montura impactante con actitud y volumen.' },
+    { title: 'Hexagonal Geométrico', description: 'Forma marcada para destacar con carácter.' },
+  ],
+  romantico: [
+    { title: 'Cat Eye', description: 'Silueta delicada y elegante con aire vintage.' },
+    { title: 'Oval Retro', description: 'Un look suave y romántico con personalidad.' },
+  ],
+  deportivo: [
+    { title: 'Deportivo Shield', description: 'Funcionalidad y estilo en una sola pieza.' },
+    { title: 'Aviador Retro Oversized', description: 'Una opción dinámica para quienes aman moverse.' },
+  ],
+};
+
+// Helpers y utilidades generales del catálogo.
 function formatPrice(price) {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
@@ -172,6 +194,7 @@ function formatPrice(price) {
 }
 
 // ---- LocalStorage ----
+// Maneja el carrito, las notas del pedido y los favoritos usando localStorage.
 function loadCart() {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -228,6 +251,7 @@ function toggleFavorite(productId) {
 }
 
 // ---- Filtros ----
+// Controla la vista del catálogo según favoritos y categoría activa.
 function hasActiveFilters() {
   return activeFilters.favorites || activeFilters.category !== null;
 }
@@ -241,6 +265,18 @@ function getFilteredProducts() {
 
   if (activeFilters.category) {
     result = result.filter((p) => p.category === activeFilters.category);
+  }
+
+  if (activeStyle) {
+    result = result.filter((p) => {
+      const styleMatch = {
+        minimalista: ['Oval Minimalista', 'Rectangular Clásica', 'Oval Vintage'],
+        bold: ['Aviador Retro Oversized', 'Hexagonal Geométrico', 'Cat Eye'],
+        romantico: ['Cat Eye', 'Oval Retro', 'Oval Vintage'],
+        deportivo: ['Deportivo Shield', 'Aviador Retro Oversized'],
+      };
+      return styleMatch[activeStyle]?.some((label) => p.model.includes(label)) ?? true;
+    });
   }
 
   return result;
@@ -280,6 +316,22 @@ function updateFavoritesUI() {
   const count = favorites.length;
   favoritesCount.hidden = count === 0;
   favoritesCount.textContent = count;
+}
+
+function renderFeaturedPicks() {
+  if (!featuredPicksEl) return;
+
+  const picks = STYLE_RECOMMENDATIONS[activeStyle] || [
+    { title: 'Aviador Retro Oversized', description: 'Un clásico con presencia y sofisticación.' },
+    { title: 'Oval Retro', description: 'Una opción elegante, versátil y muy femenina.' },
+  ];
+
+  featuredPicksEl.innerHTML = picks.map((pick) => `
+    <article class="featured-pick">
+      <strong>${pick.title}</strong>
+      <span>${pick.description}</span>
+    </article>
+  `).join('');
 }
 
 function updateFilterUI() {
@@ -345,6 +397,19 @@ function closeReferenceMenu() {
 }
 
 function initFilters() {
+  document.querySelectorAll('[data-style-selector]').forEach((button) => {
+    button.addEventListener('click', () => {
+      activeStyle = button.dataset.styleSelector;
+      document.querySelectorAll('[data-style-selector]').forEach((chip) => {
+        const isActive = chip.dataset.styleSelector === activeStyle;
+        chip.classList.toggle('style-chip--active', isActive);
+        chip.setAttribute('aria-pressed', String(isActive));
+      });
+      renderFeaturedPicks();
+      renderCatalog();
+    });
+  });
+
   filterFavorites.addEventListener('click', () => {
     activeFilters.favorites = !activeFilters.favorites;
     updateFilterUI();
@@ -389,6 +454,7 @@ function initFilters() {
 }
 
 // ---- Catálogo ----
+// Renderiza los productos visibles y enlaza los eventos de favoritos, carrusel y carrito.
 function renderCatalog() {
   const products = getFilteredProducts();
   const hasFilters = hasActiveFilters();
@@ -529,6 +595,7 @@ function updateCarousel(productId) {
 }
 
 // ---- Carrito ----
+// Añade productos, actualiza cantidades, elimina items y renderiza el panel del carrito.
 function initAddToCartButtons() {
   document.querySelectorAll('[data-add]').forEach((btn) => {
     btn.addEventListener('click', () => addToCart(btn.dataset.add));
@@ -675,6 +742,7 @@ function renderCart() {
 }
 
 // ---- Panel del carrito ----
+// Abre y cierra el panel lateral del carrito.
 function openCart() {
   cartPanel.classList.add('cart-panel--open');
   cartPanel.setAttribute('aria-hidden', 'false');
@@ -700,12 +768,14 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ---- Notas del pedido ----
+// Guarda las observaciones del pedido para el mensaje de WhatsApp.
 orderDescription.value = loadNotes();
 orderDescription.addEventListener('input', () => {
   saveNotes(orderDescription.value);
 });
 
 // ---- WhatsApp ----
+// Genera el mensaje del pedido y prepara la URL para enviar por WhatsApp.
 function getSiteUrl() {
   const host = window.location.hostname;
   if (host === 'localhost' || host === '127.0.0.1') {
@@ -782,6 +852,7 @@ whatsappBtn.addEventListener('click', () => {
 emptyCartBtn?.addEventListener('click', emptyCart);
 
 // ---- Toast ----
+// Muestra mensajes breves de confirmación para acciones del usuario.
 let toastTimeout;
 
 function showToast(text) {
@@ -794,15 +865,18 @@ function showToast(text) {
 }
 
 // ---- Header scroll ----
+// Añade un efecto visual al header al hacer scroll.
 window.addEventListener('scroll', () => {
   headerEl.classList.toggle('header--scrolled', window.scrollY > 10);
 });
 
 // ---- Init ----
+// Inicializa el catálogo, el carrito y los eventos principales al cargar la página.
 document.getElementById('headerBrand').addEventListener('click', goToCatalog);
 viewCatalogBtn.addEventListener('click', goToCatalog);
 
 initFilters();
+renderFeaturedPicks();
 renderCatalog();
 renderCart();
 
